@@ -150,23 +150,16 @@ function Footer() {
                 <Icon fill={'white'} width={'80px'} height={'88.1px'} />
             </ContainerIcon>
             <TagBy>
-                {t('MadeBy')} <Anchor href="https://github.com/avictormorais" target="blank">Victor</Anchor>
+                {t('MadeBy')} <Anchor href="https://github.com/dafydd-rhys" target="blank">Dafydd-Rhys Maund</Anchor> and
+                <Anchor href="https://github.com/morguux" target="blank"> Morgan Gardner</Anchor>
             </TagBy>
             <ContainerTheme>
                 <TitleTheme>{t('Theme')}</TitleTheme>
                 <ThemeSelector>
-                    <ThemeButton color="#070815" $active={theme === "theme-dark"} onClick={() => handleThemeChange("theme-dark")} />
-                    <ThemeButton color="#151515" $active={theme === "theme-fy"} onClick={() => handleThemeChange("theme-fy")} />
-                    <ThemeButton color="#232136" $active={theme === "theme-rose"} onClick={() => handleThemeChange("theme-rose")} />
-                    <ThemeButton color="#1f0c19" $active={theme === "theme-carmesin"} onClick={() => handleThemeChange("theme-carmesin")} />
-                    <ThemeButton color="#1e1516" $active={theme === "theme-brown"} onClick={() => handleThemeChange("theme-brown")} />
+                    <ThemeButton color="#000000" $active={theme === "theme-dark"} onClick={() => handleThemeChange("theme-dark")} />
+                    <ThemeButton color="#070815" $active={theme === "theme-light"} onClick={() => handleThemeChange("theme-mid")} />
                 </ThemeSelector>
             </ContainerTheme>
-            <Iconcontainer>
-                <Anchor href="https://github.com/avictormorais/posterfy" target="blank">
-                    <GithubIcon />
-                </Anchor>
-            </Iconcontainer>
         </Container>
     );
 }

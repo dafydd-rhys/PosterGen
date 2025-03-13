@@ -51,13 +51,13 @@ function Grid({ query, onclick }) {
             try {
                 let response;
                 if (query) {
-                    response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album`, {
+                    response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=18`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
                     });
                 } else {
-                    response = await fetch('https://api.spotify.com/v1/browse/new-releases?offset=0&limit=14&locale=en-US', {
+                    response = await fetch('https://api.spotify.com/v1/browse/new-releases?offset=0&limit=18&locale=en-US', {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
@@ -68,8 +68,10 @@ function Grid({ query, onclick }) {
                     const errorMessage = await response.text();
                     throw new Error(`Erro na API: ${errorMessage}`);
                 }
+
                 const data = await response.json();
                 const albumsData = (query ? data.albums.items : data.albums.items).filter(album => album !== null && album !== undefined);
+                
                 setAlbums(albumsData.map(album => ({
                     id: album.id,
                     title: album.name,

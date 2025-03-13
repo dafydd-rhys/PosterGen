@@ -74,15 +74,15 @@ function LanguageSelector() {
     return (
         <>
             <Flag 
-                countryCode={i18n.language === 'pt' ? 'BR' : i18n.language === 'en' ? 'US' : i18n.language === 'es' ? 'ES' : 'US'}
+                countryCode={i18n.language === 'pt' ? 'BR' : i18n.language === 'en' ? 'GB' : i18n.language === 'es' ? 'ES' : 'GB'}
                 style={{ width: '2em', height: '2em' }} 
                 svg 
                 onClick={handleClick}
             />
             <FlagsContainer $isVisible={isVisible}>
                 <Triangle />
+                <StyledFlag countryCode="GB" style={{ width: '2em', height: '2em' }} onClick={() => changeLanguage('en')} svg />
                 <StyledFlag countryCode="BR" style={{ width: '2em', height: '2em' }} onClick={() => changeLanguage('pt')} svg />
-                <StyledFlag countryCode="US" style={{ width: '2em', height: '2em' }} onClick={() => changeLanguage('en')} svg />
                 <StyledFlag countryCode="ES" style={{ width: '2em', height: '2em' }} onClick={() => changeLanguage('es')} svg />
             </FlagsContainer>
         </>

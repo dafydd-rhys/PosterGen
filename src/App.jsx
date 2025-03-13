@@ -2,15 +2,14 @@ import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero';
 import Anchor from './components/Anchor';
-import SectionExplanation from './components/SectionExplanation';
 import Searchbar from './components/Searchbar';
 import { useState, useEffect } from 'react';
 import Loading from './components/Loading';
 import Footer from './components/Footer';
 import Grid from './components/Grid';
-import Faq from './components/Faq/Faq';
 import PosterEditor from './components/PosterEditor/PosterEditor'
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   const { t } = useTranslation();
@@ -47,7 +46,6 @@ function App() {
           <Navbar />
           <Hero />
           <Anchor text={t('anchorArt')} type={1} />
-          <SectionExplanation title={t('ArtTitle')} paragraph={t('ArtParagraph')} />
           
           {albumId ? (
             <PosterEditor albumID={albumId} handleClickBack={handleClickBack}/>
@@ -63,7 +61,6 @@ function App() {
             </>
           )}
 
-          <Faq/>
           <Footer />
         </>
       )}

@@ -19,7 +19,7 @@ const Container = styled.div`
     }
 `
 
-const Posterfyh1 = styled.h1`
+const PosterGen = styled.h1`
     font-weight: bolder;
     margin-left: 20px;
     font-size: 1.3em;
@@ -41,7 +41,7 @@ function Navbar(){
         <>
             <Container>
                 <Icon fill={'#01b755'} width={'40px'} height={'44.05px'}/>
-                <Posterfyh1>Posterfy</Posterfyh1>
+                <PosterGen>PosterGen</PosterGen>
                 <Languageselector/>
             </Container>
             <Hr/>

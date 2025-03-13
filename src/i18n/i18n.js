@@ -7,14 +7,11 @@ i18n
     resources: {
         en: {
             translation: {
-                paragraphHero1: "Posterfy transforms music passion into visual art.",
-                paragraphHero2: "Create custom posters for your favorite albums using Spotify API.",
-                anchorArt: "Art.",
-                ArtTitle: "Watch the music\ntake shape",
-                ArtParagraph: "It's simple, search for your favorite album, select it and let the art flow!",
-                SearchPlaceholder: "Album name...",
-                TryTrend: "Or, try trends",
-                MadeBy: 'Made with 🎵 in 🇧🇷 by',
+                paragraph: "Create custom posters for your favorite albums.",
+                anchorArt: "Find your artist.",
+                SearchPlaceholder: "Artist Name...",
+                TryTrend: "Or, select from today's trending albums",
+                MadeBy: 'Made by',
                 GoBack: 'Back',
                 Loading: "Loading",
                 LoadingText: "We are fetching the information.",
@@ -60,8 +57,7 @@ i18n
         },
         pt: {
             translation: {
-                paragraphHero1: "Posterfy transforma a paixão por música em arte visual.",
-                paragraphHero2: "Crie pôsters personalizados para seus álbuns favoritos usando a API do Spotify.",
+                paragraph: "Crie pôsters personalizados para seus álbuns favoritos usando a API do Spotify.",
                 anchorArt: "Arte.",
                 ArtTitle: "Veja a música\ntomar forma",
                 ArtParagraph: "É simples, procure seu álbum favorito, selecione-o e deixe a arte fluir!",
@@ -113,8 +109,7 @@ i18n
         },
         es: {
             translation: {
-                paragraphHero1: "Posterfy transforma la pasión por la música en arte visual.",
-                paragraphHero2: "Crea carteles personalizados para tus álbumes favoritos usando la API de Spotify.",
+                paragraph: "Crea carteles personalizados para tus álbumes favoritos usando la API de Spotify.",
                 anchorArt: "Arte.",
                 ArtTitle: "Mira la música\ntomar forma",
                 ArtParagraph: "Es simple, busca tu álbum favorito, selecciónalo y deja fluir el arte.",
