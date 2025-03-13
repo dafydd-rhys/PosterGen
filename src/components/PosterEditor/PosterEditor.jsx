@@ -161,7 +161,7 @@ const FakePoster = styled.div`
     }
 `
 
-function PosterEditor({ albumID, handleClickBack }){
+function PosterEditor({ albumID, designId, handleClickBack }) {
     const { t } = useTranslation();
     const previewRef = useRef(null);
 
@@ -232,13 +232,13 @@ function PosterEditor({ albumID, handleClickBack }){
         setImage(imageUrl);
         setGeneratePoster(false);
     };
-    
+
     const handleApplyClick = () => {
         setGeneratePoster(true);
         if (previewRef.current) {
             window.scrollTo({
-            top: previewRef.current.offsetTop - 150,
-            behavior: 'smooth'
+                top: previewRef.current.offsetTop - 150,
+                behavior: 'smooth'
             });
         }
     };
@@ -257,7 +257,7 @@ function PosterEditor({ albumID, handleClickBack }){
         link.download = `Posterfy - ${albumName}.png`;
         link.click();
     };
-    
+
     const handleCoverDownloadClick = async () => {
         if (useUncompressed) {
             if (!uncompressedAlbumCover) return;
@@ -295,25 +295,23 @@ function PosterEditor({ albumID, handleClickBack }){
     };
 
     async function getItunesUncompressedAlbumCover(searchQuery, country = "us") {
-        
-        // Method derived from https://github.com/bendodson/itunes-artwork-finder/blob/master/api.php
 
         try {
             let apiUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(searchQuery)}&country=${country}&entity=album&limit=1`;
             let response = await fetch(apiUrl);
             if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-    
+
             let data = await response.json();
             if (!data.results?.length) {
                 console.warn("No album data found.");
                 return '';
             }
-    
-            let result = data.results[0]; // Take the first result
+
+            let result = data.results[0];
             let hires = result.artworkUrl100.replace("100x100bb", "100000x100000-999");
             let parts = hires.split("/image/thumb/");
-            
-            let uncompressedCover = parts.length === 2 
+
+            let uncompressedCover = parts.length === 2
                 ? `https://a5.mzstatic.com/us/r1000/0/${parts[1].split("/").slice(0, -1).join("/")}`
                 : '';
             return uncompressedCover;
@@ -340,7 +338,7 @@ function PosterEditor({ albumID, handleClickBack }){
             try {
                 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
                 const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-    
+
                 const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
                     method: "POST",
                     headers: {
@@ -351,22 +349,22 @@ function PosterEditor({ albumID, handleClickBack }){
                         grant_type: "client_credentials",
                     }),
                 });
-    
+
                 const tokenData = await tokenResponse.json();
                 const accessToken = tokenData.access_token;
-    
+
                 const albumResponse = await fetch(`https://api.spotify.com/v1/albums/${albumID}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
-    
+
                 const albumData = await albumResponse.json();
                 setAlbumName(albumData.name);
                 setArtistsName(albumData.artists.map((artist) => artist.name).join(", "));
                 setAlbumCover(albumData.images[0]?.url);
                 setReleaseDate(albumData.release_date);
-                
+
                 const runtime = albumData.tracks.items.reduce((totalDuration, track) => totalDuration + track.duration_ms, 0);
                 const totalSeconds = Math.floor(runtime / 1000);
                 const totalMinutes = Math.floor(totalSeconds / 60);
@@ -375,63 +373,105 @@ function PosterEditor({ albumID, handleClickBack }){
                 const remainingMinutes = totalMinutes % 60;
 
                 const formattedRuntime = totalHours > 0
-                ? `${totalHours}h ${remainingMinutes}min ${remainingSeconds}s`
-                : `${remainingMinutes}min ${remainingSeconds}s`;
+                    ? `${totalHours}h ${remainingMinutes}min ${remainingSeconds}s`
+                    : `${remainingMinutes}min ${remainingSeconds}s`;
                 setRuntime(formattedRuntime);
 
                 const tracklist = albumData.tracks.items.map((track, index) => {
                     const trackNameWithoutParentheses = track.name.replace(/\s?[\[\(].*?[\]\)]/g, '');
-                    if(index == 3){
+                    if (index == 3) {
                         setShowTracklist(true);
                     }
                     return `${index + 1}. ${trackNameWithoutParentheses}`;
                 });
-                setTracklist(tracklist.join("\n"));     
-                
-                setInfosLoaded(true);          
-    
+                setTracklist(tracklist.join("\n"));
+
+                setInfosLoaded(true);
+
             } catch (error) {
                 console.error("Error trying to fetch album data:", error);
             }
         };
-    
+
         if (albumID) fetchAlbumData();
     }, [albumID]);
-    
 
-    return(
+
+    return (
         <>
             {!infosLoaded ? (
-                <LoadingDiv/>
+                <LoadingDiv />
             ) : (
                 <Container>
-                <Palette src={albumCover} crossOrigin="anonymous" format="hex" colorCount={5}>
-                    {({ data }) => {
-                        useEffect(() => {
-                            if (data && data.length > 0) {
-                                setbackgroundColor(data[0]);
-                                setTextColor(data[1]);
-                                setcolor1(data[2]);
-                                setcolor2(data[3]);
-                                setcolor3(data[4]);
-                                handleApplyClick();
-                            }
-                        }, [data]);
-                        return null;
-                    }}
-                </Palette>
+                    <Palette src={albumCover} crossOrigin="anonymous" format="hex" colorCount={5}>
+                        {({ data }) => {
+                            useEffect(() => {
+                                if (data && data.length > 0) {
+                                    setbackgroundColor(data[0]);
+                                    setTextColor(data[1]);
+                                    setcolor1(data[2]);
+                                    setcolor2(data[3]);
+                                    setcolor3(data[4]);
+                                    handleApplyClick();
+                                }
+                            }, [data]);
+                            return null;
+                        }}
+                    </Palette>
                     <DivBack onClick={handleClickBack}>
-                        <ArrowBack/>
+                        <ArrowBack />
                         <TextBack>
                             {t('GoBack')}
                         </TextBack>
                     </DivBack>
                     <ContainerEditor>
-                        <CanvasPoster
-                            onImageReady={handleImageReady}
-                            posterData={posterData}
-                            generatePoster={generatePoster}
-                        />
+                        {
+                            designId === 1 ? (
+                                <ClassicPoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : designId === 2 ? (
+                                <ChoaticPoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : designId === 3 ? (
+                                <ModernPoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : designId === 4 ? (
+                                <VintagePoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : designId === 5 ? (
+                                <SleekPoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : designId === 6 ? (
+                                <ElegantPoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : designId === 7 ? (
+                                <CanvasPoster
+                                    onImageReady={handleImageReady}
+                                    posterData={posterData}
+                                    generatePoster={generatePoster}
+                                />
+                            ) : (
+                                <div>Please select a design</div> // Optional fallback if no design is selected
+                            )
+                        }
                         {image ? (
                             <PosterPreview src={image} ref={previewRef} />
                         ) : (
@@ -439,86 +479,86 @@ function PosterEditor({ albumID, handleClickBack }){
                         )}
                         <EditorColumn>
                             <EditorSettings>
-                                <NormalInput 
-                                    title={t('EDITOR_AlbumName')} 
-                                    value={albumName} 
+                                <NormalInput
+                                    title={t('EDITOR_AlbumName')}
+                                    value={albumName}
                                     onChange={(e) => setAlbumName(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_ArtistName')} 
-                                    value={artistsName} 
+                                <NormalInput
+                                    title={t('EDITOR_ArtistName')}
+                                    value={artistsName}
                                     onChange={(e) => setArtistsName(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_TitleSize')} 
-                                    value={titleSize} 
+                                <NormalInput
+                                    title={t('EDITOR_TitleSize')}
+                                    value={titleSize}
                                     onChange={(e) => setTitleSize(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_ArtistSize')} 
-                                    value={artistsSize} 
+                                <NormalInput
+                                    title={t('EDITOR_ArtistSize')}
+                                    value={artistsSize}
                                     onChange={(e) => setArtistsSize(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_TracksSize')} 
-                                    value={tracksSize} 
+                                <NormalInput
+                                    title={t('EDITOR_TracksSize')}
+                                    value={tracksSize}
                                     onChange={(e) => setTracksSize(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_MarginTop')} 
-                                    value={marginTop} 
+                                <NormalInput
+                                    title={t('EDITOR_MarginTop')}
+                                    value={marginTop}
                                     onChange={(e) => setMarginTop(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_MarginSide')} 
-                                    value={marginSide} 
+                                <NormalInput
+                                    title={t('EDITOR_MarginSide')}
+                                    value={marginSide}
                                     onChange={(e) => setmarginSide(e.target.value)}
                                 />
-                                <NormalInput 
-                                    title={t('EDITOR_MarginCover')} 
-                                    value={marginCover} 
+                                <NormalInput
+                                    title={t('EDITOR_MarginCover')}
+                                    value={marginCover}
                                     onChange={(e) => setMarginCover(e.target.value)}
                                 />
-        
-                                <DoubleInput 
-                                    title={titleRelease} 
-                                    value={releaseDate} 
-                                    onChangeTitle={(e) => setTitleRelease(e.target.value)} 
+
+                                <DoubleInput
+                                    title={titleRelease}
+                                    value={releaseDate}
+                                    onChangeTitle={(e) => setTitleRelease(e.target.value)}
                                     onChangeDate={(e) => setReleaseDate(e.target.value)}
                                 />
-                                <DoubleInput 
-                                    title={titleRuntime} 
-                                    value={runtime} 
-                                    onChangeTitle={(e) => setTitleRuntime(e.target.value)} 
+                                <DoubleInput
+                                    title={titleRuntime}
+                                    value={runtime}
+                                    onChangeTitle={(e) => setTitleRuntime(e.target.value)}
                                     onChangeDate={(e) => setRuntime(e.target.value)}
                                 />
-        
-                                <ColorInput 
-                                    title={t('EDITOR_BackgroundColor')} 
-                                    value={backgroundColor} 
+
+                                <ColorInput
+                                    title={t('EDITOR_BackgroundColor')}
+                                    value={backgroundColor}
                                     onClick={(e) => handleColorInputClick(e, 'backgroundColor')}
                                 />
-                                <ColorInput 
-                                    title={t('EDITOR_TextColor')} 
-                                    value={textColor} 
+                                <ColorInput
+                                    title={t('EDITOR_TextColor')}
+                                    value={textColor}
                                     onClick={(e) => handleColorInputClick(e, 'textColor')}
                                 />
-                                <ColorInput 
-                                    title={`${t('EDITOR_Color')} 1`} 
-                                    value={color1} 
+                                <ColorInput
+                                    title={`${t('EDITOR_Color')} 1`}
+                                    value={color1}
                                     onClick={(e) => handleColorInputClick(e, 'color1')}
                                 />
-                                <ColorInput 
-                                    title={`${t('EDITOR_Color')} 2`} 
-                                    value={color2} 
+                                <ColorInput
+                                    title={`${t('EDITOR_Color')} 2`}
+                                    value={color2}
                                     onClick={(e) => handleColorInputClick(e, 'color2')}
                                 />
-                                <ColorInput 
-                                    title={`${t('EDITOR_Color')} 3`} 
-                                    value={color3} 
+                                <ColorInput
+                                    title={`${t('EDITOR_Color')} 3`}
+                                    value={color3}
                                     onClick={(e) => handleColorInputClick(e, 'color3')}
                                 />
-        
+
                                 <CheckInput
                                     title={t('EDITOR_Watermark')}
                                     value={useWatermark}
@@ -548,12 +588,12 @@ function PosterEditor({ albumID, handleClickBack }){
                                     onChange={handleFileChange}
                                     text={fileName}
                                 />
-        
+
                                 {showColorSelector && colorInputPosition && currentColorInput && (
                                     <ColorSelector
-                                        DefaultColor={currentColorInput === 'backgroundColor' ? backgroundColor : 
-                                                    currentColorInput === 'textColor' ? textColor : 
-                                                    currentColorInput === 'color1' ? color1 : 
+                                        DefaultColor={currentColorInput === 'backgroundColor' ? backgroundColor :
+                                            currentColorInput === 'textColor' ? textColor :
+                                                currentColorInput === 'color1' ? color1 :
                                                     currentColorInput === 'color2' ? color2 : color3}
                                         image={albumCover}
                                         predefinedColors={[color1, color2, color3, backgroundColor, textColor]}
@@ -586,19 +626,19 @@ function PosterEditor({ albumID, handleClickBack }){
                             </EditorSettings>
                             <DivButtons>
                                 <ButtonDiv onClick={handleDownloadClick}>
-                                    <IconDownload/>
+                                    <IconDownload />
                                     <ButtonText>
                                         {t('EDITOR_Download')}
                                     </ButtonText>
                                 </ButtonDiv>
                                 <ButtonDiv onClick={handleCoverDownloadClick}>
-                                    <IconDownload/>
+                                    <IconDownload />
                                     <ButtonText>
                                         {t('EDITOR_DownloadCover')}
                                     </ButtonText>
                                 </ButtonDiv>
                                 <ButtonDiv onClick={handleApplyClick}>
-                                    <IconApply/>
+                                    <IconApply />
                                     <ButtonText>
                                         {t('EDITOR_Apply')}
                                     </ButtonText>

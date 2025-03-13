@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useRef, useEffect } from 'react';
-import waterMarkBlack from '../../assets/waterMarkBlack.png'
-import waterMarkWhite from '../../assets/waterMarkWhite.png'
 
 const CanvasPoster = ({ onImageReady, posterData, generatePoster }) => {
     const canvasRef = useRef(null);
@@ -32,22 +30,6 @@ const CanvasPoster = ({ onImageReady, posterData, generatePoster }) => {
                             ctx.fillStyle = verticalFade;
                             ctx.fillRect(0, 0, canvas.width, 2500);
                         }
-                        resolve();
-                    };
-                });
-            };
-
-            const drawWaterMark = async () => {
-                const image = new Image();
-                image.crossOrigin = "anonymous";
-                const rgb = hexToRgb(posterData.backgroundColor);
-                const contrastColor = getContrast(rgb);
-                image.src = contrastColor === 'black' ? waterMarkBlack : waterMarkWhite;
-                return new Promise((resolve) => {
-                    image.onload = () => {
-                        ctx.globalAlpha = '0.15';
-                        ctx.drawImage(image, width - 70 - 500, 50, 500, 134);
-                        ctx.globalAlpha = '1';
                         resolve();
                     };
                 });
@@ -197,9 +179,6 @@ const CanvasPoster = ({ onImageReady, posterData, generatePoster }) => {
             await drawAlbumInfos();
             if (posterData.showTracklist) {
                 await drawTracklist();
-            }
-            if (posterData.useWatermark) { 
-                await drawWaterMark();
             }
             await scannable();
         };

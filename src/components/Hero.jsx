@@ -8,7 +8,7 @@ import design3 from "../assets/posters/design_3.jpg";
 import design4 from "../assets/posters/design_4.jpg";
 import design5 from "../assets/posters/design_5.jpg";
 import design6 from "../assets/posters/design_6.jpg";
-import design7 from "../assets/posters/design_7.jpg";
+import design7 from "../assets/posters/design_7.jpg"; 
 
 const HeroDiv = styled.div`
   width: 100%;
@@ -50,7 +50,6 @@ const Title = styled.h1`
   }
 `;
 
-// Modify Paragraph to use a transient prop (prefix with $)
 const Paragraph = styled.p`
   font-size: 1em;
   opacity: 0.5;
@@ -61,9 +60,6 @@ const Paragraph = styled.p`
   @media (max-width: 900px) {
     width: 90%;
   }
-
-  // Using transient props to avoid passing "text" to the DOM
-  ${({ $text }) => $text && `color: red;`} // Example of how to use $text if needed
 `;
 
 const CarouselContainer = styled.div`
@@ -73,52 +69,30 @@ const CarouselContainer = styled.div`
 `;
 
 const data = [
-    {
-      image: design1, 
-      text: "Classic"
-    },
-    {
-      image: design2, 
-      text: "Choatic"
-    },
-    {
-      image: design3, 
-      text: "Modern"
-    },
-    {
-      image: design4,
-      text: "Vintage"
-    },
-    {
-      image: design5,
-      text: "Sleek"
-    },
-    {
-      image: design6, 
-      text: "Elegant"
-    },
-    {
-      image: design7, 
-      text: "Vibrant"
-    }
-  ];
-  
+    { id: 1, image: design1, text: "Classic" },
+    { id: 2, image: design2, text: "Choatic" },
+    { id: 3, image: design3, text: "Modern" },
+    { id: 4, image: design4, text: "Vintage" },
+    { id: 5, image: design5, text: "Sleek" },
+    { id: 6, image: design6, text: "Elegant" },
+    { id: 7, image: design7, text: "Vibrant" }
+];
 
-// Slide component updated to fix image width
 const Slide = React.memo(function Slide({
   data,
   dataIndex,
   isCenterSlide,
   swipeTo,
-  slideIndex
+  slideIndex,
+  onDesignSelect
 }) {
   const coverImage = data[dataIndex].image;
   const text = data[dataIndex].text;
+  const designId = data[dataIndex].id;
 
-  // Handle click on design/image
   const handleClick = () => {
-    console.log(`Design selected: ${text}`); // You can trigger a custom action here
-    swipeTo(slideIndex); // This moves to the selected slide
+    swipeTo(slideIndex);
+    onDesignSelect(designId);
   };
 
   return (
@@ -146,16 +120,21 @@ const Slide = React.memo(function Slide({
   );
 });
 
-const Hero = () => {
-  const ref = React.useRef(StackedCarousel);
+const Hero = ({ onDesignSelect = () => {} }) => { // Default function to avoid errors
+  const [selectedDesignId, setSelectedDesignId] = React.useState(null); 
+  const ref = React.useRef(null); // Fixed useRef initialization
   const { t } = useTranslation();
+
+  const handleDesignSelect = (designId) => {
+    setSelectedDesignId(designId);
+    onDesignSelect(designId);
+  };
 
   return (
     <HeroDiv>
       <Container>
         <Title>PosterGen</Title>
         <Paragraph>{t('paragraph')}</Paragraph>
-        
       </Container>
 
       <CarouselContainer>
@@ -164,7 +143,7 @@ const Hero = () => {
           render={(width, carouselRef) => (
             <StackedCarousel
               ref={carouselRef}
-              slideComponent={Slide}
+              slideComponent={(props) => <Slide {...props} onDesignSelect={handleDesignSelect} />}
               slideWidth={200}
               carouselWidth={width}
               data={data}
@@ -179,5 +158,6 @@ const Hero = () => {
     </HeroDiv>
   );
 };
+
 
 export default Hero;

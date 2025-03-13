@@ -16,22 +16,25 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [albumId, setAlbumId] = useState(null);
+  const [selectedDesignId, setSelectedDesignId] = useState(null);
 
   function onClickAlbum(id){
     setAlbumId(id);
   }
+
+  const handleDesignSelect = (designId) => {
+    setSelectedDesignId(designId);
+  };
 
   function handleClickBack(){
     setAlbumId(null);
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-
+    const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
+  
 
   const onSearch = (newQuery) => {
     setQuery(newQuery);
@@ -44,15 +47,15 @@ function App() {
       ) : (
         <>
           <Navbar />
-          <Hero />
+          <Hero  onDesignSelect={handleDesignSelect} />
           <Anchor text={t('anchorArt')} type={1} />
           
           {albumId ? (
-            <PosterEditor albumID={albumId} handleClickBack={handleClickBack}/>
+            <PosterEditor albumID={albumId} designId={selectedDesignId} handleClickBack={handleClickBack}/>
           ) : (
             <>
               <Searchbar onSearch={onSearch} />
-              {query && <Grid query={query} onclick={onClickAlbum} />}
+              {query && <Grid query={query} onClick={onClickAlbum} />}
 
               <div style={{ display: query ? 'none' : 'block' }}>
                 <Anchor text={t('TryTrend')} type={2}/>
