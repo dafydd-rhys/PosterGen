@@ -1,6 +1,6 @@
 {
   "homepage": "https://dafydd-rhys.github.io/PosterGen/",
-  "name": "posterge",
+  "name": "postergen",
   "private": true,
   "version": "0.0.0",
   "type": "module",
